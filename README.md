@@ -1,1 +1,1 @@
-"A simple, text-based adventure game in Java. Navigate through a mysterious room, make choices, and experience unique outcomes—all through the console. Great for learning basic Java concepts and control structures!"
+
