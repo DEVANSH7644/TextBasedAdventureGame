@@ -1,40 +1,39 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const loginForm = document.getElementById("loginForm");
-    const registerForm = document.getElementById("registerForm");
+function validateForm() {
+    let isValid = true;
 
-    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    // Clear previous error messages
+    document.getElementById("nameError").innerHTML = "";
+    document.getElementById("healthError").innerHTML = "";
+    document.getElementById("locationError").innerHTML = "";
+    document.getElementById("inventoryError").innerHTML = "";
 
-    if (loginForm) {
-        loginForm.addEventListener("submit", (e) => {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-
-            if (!validateEmail(email)) {
-                alert("Invalid email address!");
-                e.preventDefault();
-            } else if (password.length < 6) {
-                alert("Password must be at least 6 characters!");
-                e.preventDefault();
-            }
-        });
+    // Validate player name
+    const name = document.getElementById("name").value;
+    if (name.trim() === "") {
+        document.getElementById("nameError").innerHTML = "Player name is required!";
+        isValid = false;
     }
 
-    if (registerForm) {
-        registerForm.addEventListener("submit", (e) => {
-            const name = document.getElementById("name").value;
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-
-            if (name.trim().length < 3) {
-                alert("Name must be at least 3 characters!");
-                e.preventDefault();
-            } else if (!validateEmail(email)) {
-                alert("Invalid email address!");
-                e.preventDefault();
-            } else if (password.length < 6) {
-                alert("Password must be at least 6 characters!");
-                e.preventDefault();
-            }
-        });
+    // Validate health
+    const health = document.getElementById("health").value;
+    if (health <= 0 || isNaN(health)) {
+        document.getElementById("healthError").innerHTML = "Please enter a valid health value greater than 0!";
+        isValid = false;
     }
-});
+
+    // Validate location
+    const location = document.getElementById("location").value;
+    if (location.trim() === "") {
+        document.getElementById("locationError").innerHTML = "Location is required!";
+        isValid = false;
+    }
+
+    // Validate inventory
+    const inventory = document.getElementById("inventory").value;
+    if (inventory.trim() === "") {
+        document.getElementById("inventoryError").innerHTML = "Inventory is required!";
+        isValid = false;
+    }
+
+    return isValid;
+}
