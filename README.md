@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Text-Based Adventure Game
 
 ## Overview
@@ -15,16 +14,17 @@ This project is a **Text-Based Adventure Game** built using Java, with a Maven-b
 - **CSS**: Styling for the user interface.
 - **JavaScript**: Client-side form validation and interactivity.
 
-## Features
+## Features:
 - **Player Creation**: Players can create their characters by entering details such as name, health, location, and inventory.
 - **Player Management**: Admin users can view, update, or delete player data from the database.
 - **Interactive Game**: Once a player is created, they can engage with a text-based adventure game where the player's status is saved and retrieved from the database.
 
+---
 
 ## Setup Instructions
 
 ### Prerequisites:
-1. **JDK 11 or higher**: Make sure you have JDK 11 or a compatible version installed.
+1. **JDK 11 or higher**: Ensure you have JDK 11 or a compatible version installed.
 2. **MySQL Database**: Set up a MySQL database and configure your connection string in the `DatabaseConnection.java` file.
 3. **Maven**: You need Maven installed to manage dependencies and build the project.
 
@@ -54,6 +54,8 @@ This project is a **Text-Based Adventure Game** built using Java, with a Maven-b
 
     The game will be available for you to play and manage.
 
+---
+
 ### Database Setup:
 1. Create a MySQL database (e.g., `game_db`).
 2. Run the following SQL to create the `players` table:
@@ -68,10 +70,14 @@ This project is a **Text-Based Adventure Game** built using Java, with a Maven-b
     );
     ```
 
+---
+
 ### Usage:
 - **Create a Player**: Navigate to the "Create Player" page, input player details, and click "Submit" to create a new player.
 - **View Players**: Go to the "View Players" page to see a list of all players.
 - **Start Game**: After creating a player, you can start the game to interact with the game world.
+
+---
 
 ## Contributing
 Contributions are welcome! If you'd like to improve the project or fix bugs, feel free to submit a pull request.
@@ -82,34 +88,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 Thank you for checking out the Text-Based Adventure Game! Feel free to explore, play, and contribute to the project!
-=======
-# **AdventureQuest**  
-A **text-based adventure game** built using Java (Maven-based project) with HTML, CSS, and JavaScript for user management. This project includes a registration and login system, styled with Bootstrap and custom CSS, and form validation for seamless interaction.
 
 ---
-
-## **Features**
-- **Text-Based Gameplay**: Immerse yourself in a story-driven adventure with decision-based progress.  
-- **User Management**:  
-  - **Login & Registration**: Register new users or log in to your account.  
-  - **Secure Backend**: Manage user data with a MySQL database.  
-- **Responsive UI**: HTML templates styled using Bootstrap for consistent and responsive design.  
-- **Form Validation**: JavaScript-powered client-side validation for secure and error-free user inputs.
-
----
-
-## **Technologies Used**
-### **Backend**:
-- **Java**: Core logic and database handling.  
-- **Maven**: Dependency management and project build system.  
-- **MySQL**: For storing user information.  
-
-### **Frontend**:
-- **HTML**: Structuring user-facing templates.  
-- **CSS & Bootstrap**: For styling and responsive layouts.  
-- **JavaScript**: Form validation and interactivity.
-
----
->>>>>>> 6ee795439b54bf427a4ef25296db175b9757eb2f
-
-
