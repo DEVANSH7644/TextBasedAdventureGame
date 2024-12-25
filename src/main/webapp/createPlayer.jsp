@@ -29,6 +29,12 @@
                 <label for="inventory">Inventory</label>
                 <input type="text" class="form-control" id="inventory" name="inventory" required>
             </div>
+
+            <!-- Display any error message if exists -->
+            <c:if test="${not empty errorMessage}">
+                <div class="alert alert-danger">${errorMessage}</div>
+            </c:if>
+
             <button type="submit" class="btn btn-primary">Create Player</button>
         </form>
     </div>
