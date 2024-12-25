@@ -1,3 +1,5 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,20 +10,18 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-5">Get Player</h1>
-        <form action="PlayerServlet" method="get">
-            <input type="hidden" name="action" value="get">
-            <div class="form-group">
-                <label for="name">Player Name</label>
-                <input type="text" class="form-control" id="name" name="name" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Get Player</button>
-        </form>
+        <h1 class="mt-5">Player Details</h1>
 
-        <div class="mt-4">
-            <h3>Player Details:</h3>
-            <p id="playerDetails"></p>
-        </div>
+        <c:if test="${empty player}">
+            <div class="alert alert-warning">Player not found!</div>
+        </c:if>
+
+        <c:if test="${not empty player}">
+            <p><strong>Name:</strong> ${player.name}</p>
+            <p><strong>Health:</strong> ${player.health}</p>
+            <p><strong>Location:</strong> ${player.location}</p>
+            <p><strong>Inventory:</strong> ${player.inventory}</p>
+        </c:if>
     </div>
 </body>
 </html>
