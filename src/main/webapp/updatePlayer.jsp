@@ -1,3 +1,5 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,19 +15,19 @@
             <input type="hidden" name="action" value="update">
             <div class="form-group">
                 <label for="name">Player Name</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+                <input type="text" class="form-control" id="name" name="name" value="${player.name}" required>
             </div>
             <div class="form-group">
                 <label for="health">Health</label>
-                <input type="number" class="form-control" id="health" name="health" required>
+                <input type="number" class="form-control" id="health" name="health" value="${player.health}" required>
             </div>
             <div class="form-group">
                 <label for="location">Location</label>
-                <input type="text" class="form-control" id="location" name="location" required>
+                <input type="text" class="form-control" id="location" name="location" value="${player.location}" required>
             </div>
             <div class="form-group">
                 <label for="inventory">Inventory</label>
-                <input type="text" class="form-control" id="inventory" name="inventory" required>
+                <input type="text" class="form-control" id="inventory" name="inventory" value="${player.inventory}" required>
             </div>
             <button type="submit" class="btn btn-warning">Update Player</button>
         </form>
