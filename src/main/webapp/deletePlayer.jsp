@@ -1,3 +1,5 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +19,14 @@
             </div>
             <button type="submit" class="btn btn-danger">Delete Player</button>
         </form>
+
+        <!-- Display success or error message after deletion -->
+        <c:if test="${not empty message}">
+            <div class="alert alert-success">${message}</div>
+        </c:if>
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger">${errorMessage}</div>
+        </c:if>
     </div>
 </body>
 </html>
