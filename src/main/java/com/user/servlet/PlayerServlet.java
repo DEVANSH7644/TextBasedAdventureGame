@@ -1,123 +1,148 @@
 package com.user.servlet;
 
-import com.user.dao.PlayerDao;
 import com.user.model.Player;
+import com.user.util.DatabaseConnection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.List;
+import java.sql.*;
 
 @WebServlet("/PlayerServlet")
 public class PlayerServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
-    private PlayerDao playerDao;
-
-    @Override
-    public void init() {
-        playerDao = new PlayerDao();
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // Handling POST requests (Create, Update, Delete)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String action = request.getParameter("action");
-
-        try {
-            switch (action) {
-                case "save":
-                    savePlayer(request, response);
-                    break;
-                case "update":
-                    updatePlayer(request, response);
-                    break;
-                case "delete":
-                    deletePlayer(request, response);
-                    break;
-                default:
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
-            }
-        } catch (SQLException e) {
-            throw new ServletException(e);
+        
+        switch (action) {
+            case "save":
+                createPlayer(request, response);
+                break;
+            case "update":
+                updatePlayer(request, response);
+                break;
+            case "delete":
+                deletePlayer(request, response);
+                break;
+            default:
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
+                break;
         }
     }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // Handling GET requests (Get Player details)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String action = request.getParameter("action");
-
-        try {
-            switch (action) {
-                case "get":
-                    getPlayer(request, response);
-                    break;
-                case "list":
-                    listPlayers(request, response);
-                    break;
-                default:
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
-            }
-        } catch (SQLException e) {
-            throw new ServletException(e);
+        
+        if ("get".equals(action)) {
+            getPlayer(request, response);
         }
     }
 
-    private void savePlayer(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    // Method to create a new player
+    private void createPlayer(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String name = request.getParameter("name");
         int health = Integer.parseInt(request.getParameter("health"));
         String location = request.getParameter("location");
         String inventory = request.getParameter("inventory");
 
-        Player player = new Player(name, health, location, inventory);
-        playerDao.savePlayer(player);
-        response.getWriter().println("Player saved successfully!");
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String sql = "INSERT INTO players (name, health, location, inventory) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, name);
+                statement.setInt(2, health);
+                statement.setString(3, location);
+                statement.setString(4, inventory);
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
+            return;
+        }
+        response.sendRedirect("index.jsp");
     }
 
-    private void getPlayer(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+    // Method to update an existing player
+    private void updatePlayer(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String name = request.getParameter("name");
-        Player player = playerDao.getPlayer(name);
+        int health = Integer.parseInt(request.getParameter("health"));
+        String location = request.getParameter("location");
+        String inventory = request.getParameter("inventory");
 
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String sql = "UPDATE players SET health = ?, location = ?, inventory = ? WHERE name = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, health);
+                statement.setString(2, location);
+                statement.setString(3, inventory);
+                statement.setString(4, name);
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
+            return;
+        }
+        response.sendRedirect("viewPlayers.jsp");
+    }
+
+    // Method to delete a player
+    private void deletePlayer(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String name = request.getParameter("name");
+
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String sql = "DELETE FROM players WHERE name = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, name);
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
+            return;
+        }
+        response.sendRedirect("viewPlayers.jsp");
+    }
+
+    // Method to get player details and display on the page
+    private void getPlayer(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String name = request.getParameter("name");
+        Player player = null;
+
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            String sql = "SELECT * FROM players WHERE name = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, name);
+                ResultSet resultSet = statement.executeQuery();
+                
+                if (resultSet.next()) {
+                    player = new Player(resultSet.getString("name"),
+                                        resultSet.getInt("health"),
+                                        resultSet.getString("location"),
+                                        resultSet.getString("inventory"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
+            return;
+        }
+
         if (player != null) {
-            out.println("<h1>Player Details</h1>");
-            out.println("<p>Name: " + player.getName() + "</p>");
-            out.println("<p>Health: " + player.getHealth() + "</p>");
-            out.println("<p>Location: " + player.getLocation() + "</p>");
-            out.println("<p>Inventory: " + player.getInventory() + "</p>");
+            request.setAttribute("player", player);
+            request.getRequestDispatcher("viewPlayer.jsp").forward(request, response);
         } else {
-            out.println("<h1>Player not found</h1>");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Player not found");
         }
-    }
-
-    private void listPlayers(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-        List<Player> players = playerDao.getAllPlayers();
-
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        out.println("<h1>All Players</h1>");
-        for (Player player : players) {
-            out.println("<p>Name: " + player.getName() + ", Health: " + player.getHealth()
-                    + ", Location: " + player.getLocation() + ", Inventory: " + player.getInventory() + "</p>");
-        }
-    }
-
-    private void updatePlayer(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-        String name = request.getParameter("name");
-        int health = Integer.parseInt(request.getParameter("health"));
-        String location = request.getParameter("location");
-        String inventory = request.getParameter("inventory");
-
-        Player player = new Player(name, health, location, inventory);
-        playerDao.updatePlayer(player);
-        response.getWriter().println("Player updated successfully!");
-    }
-
-    private void deletePlayer(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-        String name = request.getParameter("name");
-        playerDao.deletePlayer(name);
-        response.getWriter().println("Player deleted successfully!");
     }
 }
