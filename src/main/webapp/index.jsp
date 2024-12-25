@@ -1,3 +1,5 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,42 +41,26 @@
         <h1 class="text-center">Welcome to the Text-Based Adventure Game</h1>
         <p class="text-center">Create your player and start your adventure!</p>
         
-        <div class="row justify-content-center">
-            <div class="col-lg-6 col-md-8">
-                <div class="card">
-                    <div class="card-body">
-                        <h3 class="card-title text-center">Create a New Player</h3>
-                        <form id="createPlayerForm" action="createPlayer" method="POST" onsubmit="return validateForm()">
-                            <div class="form-group">
-                                <label for="name">Player Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required placeholder="Enter Player Name">
-                                <small id="nameError" class="form-text text-danger"></small>
-                            </div>
-                            <div class="form-group">
-                                <label for="health">Health</label>
-                                <input type="number" class="form-control" id="health" name="health" required placeholder="Enter Player Health" min="1">
-                                <small id="healthError" class="form-text text-danger"></small>
-                            </div>
-                            <div class="form-group">
-                                <label for="location">Location</label>
-                                <input type="text" class="form-control" id="location" name="location" required placeholder="Enter Player Location">
-                                <small id="locationError" class="form-text text-danger"></small>
-                            </div>
-                            <div class="form-group">
-                                <label for="inventory">Inventory</label>
-                                <input type="text" class="form-control" id="inventory" name="inventory" required placeholder="Enter Player Inventory">
-                                <small id="inventoryError" class="form-text text-danger"></small>
-                            </div>
-                            <button type="submit" class="btn btn-success btn-block">Create Player</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Display List of Existing Players -->
+        <c:if test="${not empty players}">
+            <h3 class="text-center">Existing Players:</h3>
+            <ul class="list-group">
+                <c:forEach var="player" items="${players}">
+                    <li class="list-group-item">
+                        ${player.name} - ${player.health} Health, ${player.location} Location
+                    </li>
+                </c:forEach>
+            </ul>
+        </c:if>
 
+        <c:if test="${empty players}">
+            <p class="text-center">No players available. Please create a new player!</p>
+        </c:if>
+
+        <!-- Link to Create New Player -->
         <div class="row justify-content-center mt-4">
             <div class="col-lg-6 col-md-8">
-                <a href="viewPlayers.jsp" class="btn btn-info btn-block">View Existing Players</a>
+                <a href="createPlayer.jsp" class="btn btn-success btn-block">Create New Player</a>
             </div>
         </div>
     </div>
@@ -87,9 +73,5 @@
     <!-- Optional JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Custom JS for Form Validation -->
-    <script src="js/validation.js"></script>
 </body>
 </html>
-
