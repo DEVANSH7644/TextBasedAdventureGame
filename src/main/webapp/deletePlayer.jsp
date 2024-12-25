@@ -15,18 +15,10 @@
             <input type="hidden" name="action" value="delete">
             <div class="form-group">
                 <label for="name">Player Name</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+                <input type="text" class="form-control" id="name" name="name" value="${player.name}" required>
             </div>
             <button type="submit" class="btn btn-danger">Delete Player</button>
         </form>
-
-        <!-- Display success or error message after deletion -->
-        <c:if test="${not empty message}">
-            <div class="alert alert-success">${message}</div>
-        </c:if>
-        <c:if test="${not empty errorMessage}">
-            <div class="alert alert-danger">${errorMessage}</div>
-        </c:if>
     </div>
 </body>
 </html>
